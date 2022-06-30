@@ -86,28 +86,26 @@
                     </thead>
                     <tbody>
                         {% for p in pedidos %}
-                            {% if p.usuario == user %}
-                                <tr>
-                                    <th scope="row">{{ p.id }}</th>
-                                    <td>{{ p.fecha }}</td>
-                                    <td>{{ p.producto }}</td>
-                                    <td>{{ p.comuna }}</td>
-                                    <td>{{ p.direccion }}</td>
-                                    {% if p.estado == None %}
-                                        <td>
-                                            <a href="{% url 'editarpedido' p.id %}" class="btn btn-sm btn-outline-dark">
-                                                En revisión 
-                                            </a>
-                                        </td>
-                                    {% else %}
-                                        <td>
-                                            <a href="{% url 'editarpedido' p.id %}" class="btn btn-sm btn-outline-dark">
-                                                {{ p.estado }}
-                                            </a>
-                                        </td>
-                                    {% endif %}
-                                </tr>
-                            {% endif %}
+                            <tr>
+                                <th scope="row">{{ p.id }}</th>
+                                <td>{{ p.fecha }}</td>
+                                <td>{{ p.producto }}</td>
+                                <td>{{ p.comuna }}</td>
+                                <td>{{ p.direccion }}</td>
+                                {% if p.estado == None %}
+                                    <td>
+                                        <a href="{% url 'editarpedido' p.id %}" class="btn btn-sm btn-outline-dark">
+                                            En revisión 
+                                        </a>
+                                    </td>
+                                {% else %}
+                                    <td>
+                                        <a href="{% url 'editarpedido' p.id %}" class="btn btn-sm btn-outline-dark">
+                                            {{ p.estado }}
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            </tr>
                         {% endfor %}
                     </tbody>
                   </table>

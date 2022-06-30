@@ -116,7 +116,7 @@ def comprar(request, id):
 def pedidos(request):
 
     data = {
-        'pedidos': Pedido.objects.all(),
+        'pedidos': Pedido.objects.filter(usuario = request.user),
         'user': request.user
     }
 
