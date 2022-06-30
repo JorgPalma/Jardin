@@ -1,4 +1,3 @@
-{% load crispy_forms_tags %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -71,21 +70,33 @@
         </nav>
     </header>
     <div class="container">
-        <h2 class="fs-2 mb-4 text-center">Editar productos</h2>
-        <div class="row d-flex justify-content-center">
-            <div class="col-12 col-md-8 col-lg-6 mb-4">         
-                <form action="" method="post" enctype="multipart/form-data">
-
-                    {% csrf_token %}
-
-                    {{ form | crispy }}
-
-                    <div class="d-flex justify-content-end mb-3">
-                        <input type="reset" value="Limpiar" class="btn btn-warning">
-                        &nbsp;
-                        <input type="submit" value="Editar" class="btn btn-success">
-                    </div>        
-                </form>
+        <h2 class="fs-2 mb-4">Mis pedidos</h2>
+        <div class="row">
+            <div class="col-12">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Producto</th>
+                        <th scope="col">Estado</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in pedidos %}
+                        <tr>
+                            <th scope="row">{{ p.id }}</th>
+                            <td>{{ p.fecha }}</td>
+                            <td>{{ p.producto }}</td>
+                            {% if p.estado == None %}
+                                <td>En revisión</td>
+                            {% else %}
+                                <td>{{ p.estado }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
             </div>
         </div>
     </div>

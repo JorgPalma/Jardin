@@ -1,8 +1,9 @@
 from gc import get_objects
 import re
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import ProductoForms, SuscripcionForms, CompraForms
+from .forms import ProductoForms, SuscripcionForms, CompraForms, PedidoForms, CustomUserCreationForm
 from .models import Producto, Suscripcion, Pedido
+from django.contrib.auth import authenticate, login
 
 # Create your views here.
 
@@ -23,8 +24,13 @@ def home(request):
 
     return render(request, 'core/index.html', data)
 
-def pedidos(request):
-    return render(request, 'core/pedidos.html')
+def mispedidos(request):
+
+    data = {
+        'pedidos': Pedido.objects.filter(usuario = request.user)
+    }
+
+    return render(request, 'core/mispedidos.html', data)
 
 def productos(request):
 
@@ -86,27 +92,68 @@ def borrar(request, id):
 
 def comprar(request, id):
     suscripcion = Suscripcion.objects.filter(usuario = request.user)
+    producto = get_object_or_404(Producto, id=id)
 
     data = {
         'producto': get_object_or_404(Producto, id=id),
         'suscripcion': suscripcion,
-        'form': CompraForms()
+        'form': CompraForms(),
     }
 
-    producto = get_object_or_404(Producto, id=id)
 
     if request.method == 'POST':
         formulario = CompraForms(data=request.POST)
-        formulario2 = ProductoForms(data=request.POST)
         if formulario.is_valid():
             rating_form = formulario.save(commit=False)
             rating_form.usuario = request.user
             rating_form.producto = producto
             rating_form.save()
-            rating_form2 = formulario2.save(commit=False)
-            rating_form2.stock = producto.stock - 1
-            rating_form.save()
         else:
             data["form"] = formulario
 
     return render(request, 'core/comprar.html', data)
+
+def pedidos(request):
+
+    data = {
+        'pedidos': Pedido.objects.filter(usuario = request.user),
+        'user': request.user
+    }
+
+    return render(request, 'core/pedidos.html', data)
+
+def editarpedido(request, id):
+
+    pedido = get_object_or_404(Pedido, id=id)
+
+    data = {
+        'form': PedidoForms(instance=pedido)
+    }
+
+    if request.method == 'POST':
+        formulario = PedidoForms(data=request.POST, instance=pedido, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect(to="pedidos")
+        data["form"] = formulario
+            
+
+    return render(request, 'core/editarpedido.html', data)
+
+def registro(request):
+
+    data = {
+        'form': CustomUserCreationForm()
+    }
+
+    if request.method == 'POST':
+        formulario = CustomUserCreationForm(data=request.POST)
+        if formulario.is_valid():
+            formulario.save()
+            user = authenticate(username=formulario.cleaned_data["username"], password=formulario.cleaned_data["password1"])
+            login(request.user)
+            return redirect(to="home")
+        else:
+            data["form"] = formulario
+
+    return render(request, 'registration/registro.html', data)

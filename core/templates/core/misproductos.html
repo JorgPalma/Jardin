@@ -25,20 +25,45 @@
                             <a href="{% url 'home' %}" class="nav-link ml-lg-2 active text-success fw-bold">Inicio</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'home' %}" class="nav-link text-success fw-bold">Nostros</a>
+                            <a href="#nosotros" class="nav-link text-success fw-bold">Nostros</a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'productos' %}" class="nav-link text-success fw-bold">Productos</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{% url 'pedidos' %}" class="nav-link text-success fw-bold">Pedidos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'publicar' %}" class="nav-link text-success fw-bold">Publicar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link text-success fw-bold">Ingresar</a>
-                        </li>
+                        {% if user.is_authenticated %}
+                            <li class="nav-item dropdown text-success fw-bold">
+                                <a class="nav-link dropdown-toggle text-success fw-bold" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ user.username }}
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    {% if perms.app.change_pedido %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'pedidos' %}" class="nav-link text-success fw-bold">Pedidos</a>
+                                    </li>
+                                    {% endif %}
+                                    {% if perms.app.view_producto %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'misproductos' %}" class="nav-link text-success fw-bold">Mis Productos</a>
+                                    </li>
+                                    {% endif %}
+                                    <li class="nav-item">
+                                        <a href="{% url 'mispedidos' %}" class="nav-link text-success fw-bold">Mis pedidos</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% if perms.app.add_producto %}
+                                <li class="nav-item">
+                                    <a href="{% url 'publicar' %}" class="nav-link text-success fw-bold">Publicar</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a href="{% url 'logout' %}" class="nav-link text-success fw-bold">Cerrar Sesión</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a href="{% url 'login' %}" class="nav-link text-success fw-bold">Iniciar Sesión</a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
