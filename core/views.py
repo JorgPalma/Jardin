@@ -151,7 +151,7 @@ def registro(request):
         if formulario.is_valid():
             formulario.save()
             user = authenticate(username=formulario.cleaned_data["username"], password=formulario.cleaned_data["password1"])
-            login(request.user)
+            login(request, user)
             return redirect(to="home")
         else:
             data["form"] = formulario
