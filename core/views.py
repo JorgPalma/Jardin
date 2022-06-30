@@ -116,8 +116,7 @@ def comprar(request, id):
 def pedidos(request):
 
     data = {
-        'pedidos': Pedido.objects.filter(usuario = request.user),
-        'user': request.user
+        'pedidos': Pedido.objects.all(),
     }
 
     return render(request, 'core/pedidos.html', data)
